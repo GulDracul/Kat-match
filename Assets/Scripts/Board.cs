@@ -8,13 +8,31 @@ public class Board : MonoBehaviour
     [SerializeField] private int width;//ancho
     [SerializeField] private int height;//alto
     [SerializeField] private GameObject tileObject;
+
     [SerializeField] private float cameraSizeOffset;
     [SerializeField] private float cameraVerticalOffset;
+
+    [SerializeField] private GameObject[] availablePieces;
     // Start is called before the first frame update
     void Start()
     {
         SetupBoard();
         PositionCamera();
+        SetupPieces();
+    }
+
+    private void SetupPieces()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                var selectedPiece = availablePieces[UnityEngine.Random.Range(0,availablePieces.Length)];
+                var o = Instantiate(selectedPiece, new Vector3(x, y, -5), Quaternion.identity);
+                o.transform.parent = transform;
+                o.GetComponent<Piece>()?.Setup(x, y, this);
+            }
+        }
     }
 
     private void PositionCamera()
